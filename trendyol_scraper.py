@@ -51,7 +51,7 @@ class TrendyolScraper(TrendyolService):
                 "output/colors.json", ujson.dumps(self.all_colors)
             )
 
-        return DictionaryUtils.get_unique_list_from_dicts(self.all_colors)
+        return DictionaryUtils.get_unique_list(self.all_colors)
 
     def get_all_sizes(self, write2file=False):
         asyncio.run(self.fetch_all_sizes())
@@ -71,7 +71,7 @@ class TrendyolScraper(TrendyolService):
                 "output/brands.json", ujson.dumps(self.all_brands)
             )
 
-        return DictionaryUtils.get_unique_list_from_dicts(self.all_brands)
+        return DictionaryUtils.get_unique_list(self.all_brands)
 
     def get_all_categories(self, write2file=False):
         asyncio.run(self.fetch_all_categories())
