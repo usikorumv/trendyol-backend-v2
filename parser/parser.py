@@ -41,7 +41,7 @@ class Scraper:
         for size in sizes:
             name = size["name"]
             slug = size["slug"]
-            SizeL.objects.update_or_create(slug=slug, defaults={"name": name})
+            Size.objects.update_or_create(slug=slug, defaults={"name": name})
 
         return f"Sizes added successfully! {len(sizes)}"
 
@@ -79,7 +79,7 @@ class Scraper:
 
         all_products = self.scraper.get_all_products()
 
-        for product in products:
+        for product in all_products:
             id = product["id"]
             name = product["name"]
             campaign = product["campaign"]
@@ -109,15 +109,15 @@ class Scraper:
                 category = Category.objects.get(slug=category_slug)
             show_size_slug = product["showSize"].lower()
             try:
-                show_size = SizeL.objects.get(slug=show_size_slug)
+                show_size = Size.objects.get(slug=show_size_slug)
             except:
-                SizeL.objects.create(slug=show_size_slug, name=show_size_slug.upper())
-                show_size = SizeL.objects.get(slug=show_size_slug)
+                Size.objects.create(slug=show_size_slug, name=show_size_slug.upper())
+                show_size = Size.objects.get(slug=show_size_slug)
             try:
                 Product.objects.create(
                     id=id,
                     name=name,
-                    link=link,
+                    # link=link,
                     description=description,
                     category=category,
                     discounted_price=discounted_price * coefficient,
@@ -200,7 +200,7 @@ class Scraper:
                     Size.objects.create(
                         slug=show_size_slug, name=show_size_slug.upper()
                     )
-                    show_size = SizeL.objects.get(slug=show_size_slug)
+                    show_size = Size.objects.get(slug=show_size_slug)
                 try:
                     Product.objects.create(
                         id=id,

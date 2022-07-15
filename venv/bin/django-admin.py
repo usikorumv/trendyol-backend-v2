@@ -1,4 +1,4 @@
-#!/Users/usmanomuraliev/python_projects/trendyol_backend_v2/trendyol_backend/venv/bin/python3.9
+#!/home/hello/Desktop/trendyol-backend-v2/venv/bin/python3
 # When the django-admin.py deprecation ends, remove this script.
 import warnings
 

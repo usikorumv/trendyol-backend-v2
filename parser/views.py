@@ -91,7 +91,7 @@ class ImageView(ModelViewSet):
         serializer.save(user=self.request.user)
 
 class CategoryView(ListAPIView):
-    permission_classes = [AllowAny, ]
+    # permission_classes = [AllowAny, ]
     queryset = Category.objects.all()
     serializer_class = CategorySerializers
 
@@ -111,7 +111,7 @@ class ParseColor(APIView):
 
 
 class ParseBrand(APIView):
-    permission_classes = [IsAdminUser, ]
+    # permission_classes = [IsAdminUser, ]
 
     def get(self, request, format=None):
         scraper = Scraper()
@@ -120,7 +120,7 @@ class ParseBrand(APIView):
 
 
 class ParseSize(APIView):
-    permission_classes = [IsAdminUser, ]
+    # permission_classes = [IsAdminUser, ]
 
     def get(self, request, format=None):
         scraper = Scraper()
@@ -129,24 +129,30 @@ class ParseSize(APIView):
 
 
 class ParseProduct(APIView):
-    permission_classes = [IsAdminUser, ]
+    # permission_classes = [IsAdminUser, ]
 
-    def post(self, request, format=None):
+    def get(self, request, format=None):
         scraper = Scraper()
-        data = request.data
-        coefficient = data["coefficient"]
-        coefficient = int(coefficient)
-        responce = scraper.parse_products(coefficient)
+        responce = scraper.parse_products(1)
         return Response(responce)
+
+    # def post(self, request, format=None):
+    #     scraper = Scraper()
+    #     data = request.data
+    #     # coefficient = data["coefficient"]
+    #     # coefficient = int(coefficient)
+    #     print(data)
+    #     responce = scraper.parse_products(coefficient)
+    #     return Response(responce)
 
 
 class BrandView(generics.ListAPIView):
     queryset = Brand.objects.all()
     serializer_class = BrandSerializer
-    permission_classes = [AllowAny, ]
+    # permission_classes = [AllowAny, ]
 
 
 class ColorView(generics.ListAPIView):
     queryset = Color.objects.all()
     serializer_class = ColorSerializer
-    permission_classes = [AllowAny, ]
+    # permission_classes = [AllowAny, ]
