@@ -126,19 +126,19 @@ class Image(models.Model):
     #     return self.product
 
 
-class Review(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comment")
-    product = models.ForeignKey(
-        Product, on_delete=models.CASCADE, related_name="comment"
-    )
-    comment = models.TextField()
-
-    def __str__(self):
-        return f"{self.user} - {self.comment}"
-
-    class Meta:
-        verbose_name = "Review"
-        verbose_name_plural = "Reviews"
+# class Review(models.Model):
+#     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comment")
+#     product = models.ForeignKey(
+#         Product, on_delete=models.CASCADE, related_name="comment"
+#     )
+#     comment = models.TextField()
+#
+#     def __str__(self):
+#         return f"{self.user} - {self.comment}"
+#
+#     class Meta:
+#         verbose_name = "Review"
+#         verbose_name_plural = "Reviews"
 
 
 # class FavouriteProduct(models.Model):
