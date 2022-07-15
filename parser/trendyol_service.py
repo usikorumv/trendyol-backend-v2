@@ -1,9 +1,8 @@
-import pretty_errors
 import ujson
 import asyncio
 import aiohttp
 
-from trendyol_apis import TrendyolAPIs
+from .trendyol_apis import TrendyolAPIs
 
 
 headers = {

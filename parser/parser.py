@@ -1,9 +1,12 @@
 from products.models import *
-from trendyol_scraper import TrendyolScraper
 
 import json
 from django.db.utils import IntegrityError
 import os.path
+
+# from trendyol_backend.products.models import *
+
+from .trendyol_scraper import TrendyolScraper
 
 class Scraper:
     def __init__(self):

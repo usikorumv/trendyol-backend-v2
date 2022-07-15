@@ -95,9 +95,9 @@ WSGI_APPLICATION = 'trendyol_backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'trendyol',
-        'USER': 'hello',
-        'PASSWORD': '1',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': '1234',
         'HOST': 'localhost',
         'PORT': 5432
     }

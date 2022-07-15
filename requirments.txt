@@ -7,3 +7,4 @@ drf-yasg
 ujson
 aiohttp
 django-filter
+pretty_errors
