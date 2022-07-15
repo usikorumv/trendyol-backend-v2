@@ -79,6 +79,8 @@ class Product(models.Model):
     currency = models.CharField(max_length=55)
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE, related_name="products")
 
+
+
     class Meta:
         verbose_name = "Product"
         verbose_name_plural = "Products"
