@@ -88,11 +88,11 @@ class BaseProduct(models.Model):
         verbose_name_plural = "Products"
 
     def __str__(self):
-        return "{self.campaign} {self.name}"
+        return f"{self.campaign} {self.name}"
 
 
 class Image(models.Model):
-    link = models.CharField(max_length=1000)
+    url = models.CharField(max_length=1000)
     product = models.ForeignKey(BaseProduct, on_delete=models.CASCADE, related_name="images")
 
     class Meta:

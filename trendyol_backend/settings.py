@@ -42,9 +42,11 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'drf_yasg',
+    'django_filters',
 
     # Local
     'api',
+    'base_product',
     'products',
     'product_cards',
 ]
@@ -95,7 +97,7 @@ WSGI_APPLICATION = 'trendyol_backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
+        'NAME': 'trendyol',
         'USER': 'postgres',
         'PASSWORD': '1234',
         'HOST': 'localhost',

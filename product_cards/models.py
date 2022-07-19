@@ -1,30 +1,21 @@
 from django.db import models
 
-from products.models import Product, Category, Color, Size, Brand
+from base_product.models import *
+from products.models import Product
 
 
-class ProductCard(models.Model):
-    name = models.CharField(max_length=255)
-    category = models.ForeignKey(
-        Category, on_delete=models.CASCADE, related_name="productcard"
-    )
-    description = models.TextField()
-    show_color = models.ForeignKey(
-        Color, on_delete=models.CASCADE, related_name="productcard"
-    )
-    discounted_price = models.PositiveIntegerField(blank=True, null=True)
-    selling_price = models.PositiveIntegerField()
-    original_price = models.PositiveIntegerField()
-    show_size = models.ForeignKey(Size, on_delete=models.CASCADE, related_name="productcard")
-    campaign = models.CharField(max_length=255)
-    currency = models.CharField(max_length=55)
-    brand = models.ForeignKey(Brand, on_delete=models.CASCADE, related_name="productcard")
+class ProductCard(BaseProduct):
+    pass
 
-    colors = models.ManyToManyField(Product, related_name='productcard',)
+
+class ProductColor(models.Model):
+    color = models.ForeignKey(Color, on_delete=models.CASCADE, related_name="colors")
+    product_card = models.ForeignKey(ProductCard, on_delete=models.CASCADE, related_name="colors")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="colors")
+
+    class Meta:
+        verbose_name = "Color"
+        verbose_name_plural = "Colors"
 
     def __str__(self):
-        return self.name
-
-
-
-
+        return f"{self.color.name} {self.product.name}"

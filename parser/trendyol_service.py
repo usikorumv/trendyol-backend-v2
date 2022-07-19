@@ -192,11 +192,11 @@ class TrendyolService(TrendyolAPIs):
 
         return product
 
-    async def fetch_product_from_card_data(self, session, card_data: dict):
+    async def fetch_product_card_from_raw(self, session, raw_card_data: dict):
         try:
-            attributes = await self.fetch_product_attributes(session, card_data)
+            attributes = await self.fetch_product_attributes(session, raw_card_data)
 
-            product = await self.fetch_product_from_id(session, card_data["id"])
+            product = await self.fetch_product_from_id(session, raw_card_data["id"])
 
             # TODO: Make async
             product["colors"] = (
@@ -218,7 +218,7 @@ class TrendyolService(TrendyolAPIs):
         except:
             pass
 
-    async def fetch_all_products_from_link(self, session, link, page):
+    async def fetch_all_product_cards_from_link(self, session, link, page):
         try:
             async with session.get(
                 self.get_products_api(link, page),
@@ -227,11 +227,11 @@ class TrendyolService(TrendyolAPIs):
             ) as response:
                 data = ujson.loads(await response.text())
 
-                raw_products = data["result"]["products"]
+                raw_product_cards = data["result"]["products"]
 
-                for raw_product in raw_products:
+                for raw_product_card in raw_product_cards:
                     self.all_products.append(
-                        await self.fetch_product_from_card_data(session, raw_product)
+                        await self.fetch_product_card_from_raw(session, raw_product_card)
                     )
 
                 print(f"\nLink: {link}\nPage: {page + 1}")
@@ -243,7 +243,7 @@ class TrendyolService(TrendyolAPIs):
             print(f"\nFAILED Link: {link}\nPage: {page + 1}")
 
     # TODO: Add parameters like how much pages and categories (also check if they are valid)
-    async def fetch_all_products(self):
+    async def fetch_all_product_cards(self):
         # TODO: OPTIMIZE
         with open("output/categories.json", "r") as f:
             categories = ujson.loads(f.read())
@@ -271,11 +271,11 @@ class TrendyolService(TrendyolAPIs):
         # async with aiohttp.ClientSession() as session:
 
             tasks = [
-                self.fetch_all_products_from_link(session, category["link"], page)
-                # for page in range(208 + 1)  # JUST FOR TEST
-                # for category in end_categories  # JUST FOR TEST
-                for page in range(1)  # JUST FOR TEST
-                for category in end_categories[:1]  # JUST FOR TEST
+                self.fetch_all_product_cards_from_link(session, category["link"], page)
+                for page in range(208 + 1)
+                for category in end_categories
+                # for page in range(1)  # FOR TEST PURPOSES
+                # for category in end_categories[:1]  # FOR TEST PURPOSES
             ]
 
             await asyncio.gather(*tasks)
@@ -401,7 +401,7 @@ class TrendyolService(TrendyolAPIs):
         tasks = []
 
         async with aiohttp.ClientSession() as session:
-            for category in self.categories:
+            for category in self.all_categories:
                 tasks.append(self.fetch_brands_from_link(session, category["link"]))
 
             await asyncio.gather(*tasks)

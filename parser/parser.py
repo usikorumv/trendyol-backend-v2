@@ -1,12 +1,12 @@
-from products.models import *
-
-import json
-from django.db.utils import IntegrityError
-import os.path
-
-# from trendyol_backend.products.models import *
-
+import ujson
+from slugify import slugify
 from .trendyol_scraper import TrendyolScraper
+from base_product.models import *
+from products.models import *
+from product_cards.models import *
+
+# TODO: PASTE ALL SLUGS FROM SLUGIFY
+
 
 class Scraper:
     def __init__(self):
@@ -14,39 +14,39 @@ class Scraper:
 
     def parse_colors(self):
         Color.objects.all().delete()
-        print('=====================================================')
-        colors = self.scraper.get_all_colors()
 
-        for color in colors:
+        all_colors = self.scraper.get_all_colors()
+
+        for color in all_colors:
             name = color["name"]
             slug = color["slug"]
             Color.objects.update_or_create(slug=slug, defaults={"color": name})
 
-        return f"Colors were added successfully! {len(colors)}"
+        return f"Colors were added successfully! {len(all_colors)}"
 
     def parse_brands(self):
         Brand.objects.all().delete()
 
-        brands = self.scraper.get_all_brands()
+        all_brands = self.scraper.get_all_brands()
 
-        for brand in brands:
+        for brand in all_brands:
             name = brand["name"]
             slug = brand["slug"]
             Brand.objects.update_or_create(slug=slug, defaults={"brand": name})
 
-        return f"Brands were added successfully {len(brands)}"
+        return f"Brands were added successfully {len(all_brands)}"
 
     def parse_sizes(self):
         Size.objects.all().delete()
 
-        sizes = self.scraper.get_all_sizes()
+        all_sizes = self.scraper.get_all_sizes()
 
-        for size in sizes:
+        for size in all_sizes:
             name = size["name"]
             slug = size["slug"]
             Size.objects.update_or_create(slug=slug, defaults={"name": name})
 
-        return f"Sizes added successfully! {len(sizes)}"
+        return f"Sizes added successfully! {len(all_sizes)}"
 
     def parse_categories(self):
         Category.objects.all().delete()
@@ -66,150 +66,76 @@ class Scraper:
             except:
                 Category.objects.update_or_create(slug=slug, defaults={"title": name})
 
-        return f"Categories were added sucessfully! {len(all_categories)}"
+        return f"Categories were added successfully! {len(all_categories)}"
 
-    def parse_products(self, coefficient):
-        Product.objects.all().delete()
+    def parse_product_cards(self, currency="TL", coefficient=1):
+        all_product_cards = self.scraper.get_all_product_cards()
 
-        all_products = self.scraper.get_all_products()
+        # FOR TEST PURPOSES
+        # with open("output/products.json", "r", encoding="utf-8") as f:
+        #     all_product_cards = ujson.load(f)
 
-        for product in all_products:
-            id = product["id"]
-            name = product["name"]
-            campaign = product["campaign"]
-            discounted_price = product["price"]["discountedPrice"]["value"]
-            selling_price = product["price"]["sellingPrice"]["value"]
-            original_price = product["price"]["originalPrice"]["value"]
-            currency = product["price"]["currency"]
-            description = product["description"]
-            brand_slug = product["brand"]["slug"]
+        for product_card in all_product_cards:
+            print(product_card["id"])
 
-            # if product['colors'] != []:
-            #     for color in product['colors']:
-            #         color['product']
+            product_card_obj = self.add_product_to_db(product_card, ProductCard)
 
-            try:
-                brand = Brand.objects.get(slug=brand_slug)
-            except:
-                Brand.objects.update_or_create(slug=brand_slug, brand=brand_slug)
-                brand = Brand.objects.get(slug=brand_slug)
-            color_slug = product["showColor"]
-            try:
-                color = Color.objects.get(slug=color_slug)
-            except:
-                Color.objects.update_or_create(slug=color_slug, color=color_slug)
-                color = Color.objects.get(slug=color_slug)
-            category_slug = product["category"]["slug"]
-            try:
-                category = Category.objects.get(slug=category_slug)
-            except:
-                Category.objects.update_or_create(slug=category_slug, title=category_slug)
-                category = Category.objects.get(slug=category_slug)
-            show_size_slug = product["showSize"].lower()
-            try:
-                show_size = Size.objects.get(slug=show_size_slug)
-            except:
-                Size.objects.create(slug=show_size_slug, name=show_size_slug.upper())
-                show_size = Size.objects.get(slug=show_size_slug)
-            try:
-                Product.objects.update_or_create(
-                    id=id,
-                    name=name,
-                    description=description,
-                    category=category,
-                    discounted_price=discounted_price * coefficient,
-                    selling_price=selling_price * coefficient,
-                    original_price=original_price * coefficient,
-                    brand=brand,
-                    campaign=campaign,
-                    currency=currency,
-                    show_color=color,
-                    show_size=show_size,
-                )
-            except IntegrityError:
-                pass
+            for color in product_card["colors"]:
+                color_obj = Color(name=color["name"], slug=color["slug"])
+                color_obj.save()
 
-            all_sizes = product["sizes"]
-            product_obj = Product.objects.get(pk=id)
-            images_list = product["images"]
+                product_obj = self.add_product_to_db(color["product"], Product)
 
-            for image_url in images_list:
-                Image.objects.get_or_create(product=product_obj, image=image_url)
+                ProductColor.objects.update_or_create(color=color_obj, product_card=product_card_obj, product=product_obj)
 
-            for size in all_sizes:
-                value_slug = size["value"].lower()
-                try:
-                    value = Size.objects.get(slug=value_slug)
-                except:
-                    Size.objects.update_or_create(slug=value_slug, name=value_slug.upper())
-                    value = Size.objects.get(slug=value_slug)
-                in_stock = size["inStock"]
-                price = size["price"]
-                currency = size["currency"]
-                
-            colors = product["colors"]
-            for product_color in colors:
-                id = product_color["product"]["id"]
-                name = product_color["product"]["name"]
-                campaign = product_color["product"]["campaign"]
-                discounted_price = product_color["product"]["price"]["discountedPrice"][
-                    "value"
-                ]
-                selling_price = product_color["product"]["price"]["sellingPrice"][
-                    "value"
-                ]
-                original_price = product_color["product"]["price"]["originalPrice"][
-                    "value"
-                ]
-                currency = product_color["product"]["price"]["currency"]
-                description = product_color["product"]["description"]
-                brand_slug = product_color["product"]["brand"]["slug"]
-                try:
-                    brand = Brand.objects.get(slug=brand_slug)
-                except:
-                    Brand.objects.update_or_create(slug=brand_slug, brand=brand_slug)
-                    brand = Brand.objects.get(slug=brand_slug)
-                color_slug = product_color["slug"]
-                try:
-                    color = Color.objects.get(slug=color_slug)
-                except:
-                    Color.objects.update_or_create(slug=color_slug, color=color_slug)
-                    color = Color.objects.get(slug=color_slug)
-                category_slug = product_color["product"]["category"]["slug"]
-                try:
-                    category = Category.objects.get(slug=category_slug)
-                except:
-                    Category.objects.update_or_create(slug=category_slug, title=category_slug)
-                    category = Category.objects.get(slug=category_slug)
-                show_size_slug = product_color["product"]["showSize"].lower()
-                try:
-                    show_size = Size.objects.get(slug=show_size_slug)
-                except:
-                    Size.objects.create(
-                        slug=show_size_slug, name=show_size_slug.upper()
-                    )
-                    show_size = Size.objects.get(slug=show_size_slug)
-                try:
-                    Product.objects.update_or_create(
-                        id=id,
-                        name=name,
-                        description=description,
-                        category=category,
-                        discounted_price=discounted_price * coefficient,
-                        selling_price=selling_price * coefficient,
-                        original_price=original_price * coefficient,
-                        brand=brand,
-                        campaign=campaign,
-                        currency=currency,
-                        show_color=color,
-                        show_size=show_size,
-                    )
-                except IntegrityError:
-                    pass
 
-                product_obj = Product.objects.get(pk=id)
-                images_list2 = product_color["product"]["images"]
+    def add_product_to_db(self, product, instance: BaseProduct) -> BaseProduct:
+        image_links = product["images"]
+        category = product["category"]
+        show_color = product["showColor"]
+        show_size = product["showSize"]
+        brand = product["brand"]
+        sizes = product["sizes"]
 
-                for image_url in images_list:
-                    Image.objects.get_or_create(product=product_obj, image=image_url)
+        try:
+            category_obj = Category.objects.get(slug=category["slug"])
+        except:
+            category_obj = Category(slug=category["slug"], title=category["name"])
+            category_obj.save()
 
+        brand_obj = Brand(name=brand["name"], slug=brand["slug"])
+        brand_obj.save()
+
+        color_obj = Color(name=show_color, slug=slugify(show_color))
+        color_obj.save()
+
+        size_obj = Size(name=show_size, slug=slugify(show_size))
+        size_obj.save()
+
+        product_obj = instance(
+            id=product["id"],
+            campaign=product["campaign"],
+            name=product["name"],
+            rating=product["rating"],
+            description=product["description"],
+            category=category_obj,
+            show_color=color_obj,
+            show_size=size_obj,
+            discounted_price=product["price"]["discountedPrice"]["value"],
+            selling_price=product["price"]["sellingPrice"]["value"],
+            original_price=product["price"]["originalPrice"]["value"],
+            currency=product["price"]["currency"],
+            brand=brand_obj,
+        )
+        product_obj.save()
+
+        for link in image_links:
+            Image.objects.update_or_create(link=link, product=product_obj)
+
+        for size in sizes:
+            size_obj = Size(name=size["value"], slug=slugify(size["value"]))
+            size_obj.save()
+            ProductSize.objects.update_or_create(size=size_obj, in_stock=size["inStock"], product=product_obj,
+                                                 price=size["price"])
+
+        return product_obj
