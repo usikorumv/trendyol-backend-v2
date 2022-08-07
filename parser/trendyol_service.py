@@ -7,9 +7,9 @@ from .trendyol_apis import TrendyolAPIs
 
 headers = {
     "Accept": "application/json, text/plain, */*",
-    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.4 Safari/605.1.15",
+    # "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.4 Safari/605.1.15",
     "Accept-Language": "en-GB,en-US;q=0.9,en;q=0.8",
-    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJTdGFuZGFyZFVzZXIiOiIwIiwidW5pcXVlX25hbWUiOiJ1c21hbi5vbXVyYWxpZXZAYWxhdG9vLmVkdS5rZyIsInN1YiI6InVzbWFuLm9tdXJhbGlldkBhbGF0b28uZWR1LmtnIiwicm9sZSI6InVzZXIiLCJhdHdydG1rIjoiZDMwZGMxZjYtZTRlZS0xMWVjLWJiODUtOGE1NTRiMmY1N2E3IiwidXNlcklkIjoiOTM2ODAxMDkiLCJlbWFpbCI6InVzbWFuLm9tdXJhbGlldkBhbGF0b28uZWR1LmtnIiwiYXVkIjoic2JBeXpZdFgramhlTDRpZlZXeTV0eU1PTFBKV0Jya2EiLCJleHAiOjE4MTIyMzU0OTMsImlzcyI6ImF1dGgudHJlbmR5b2wuY29tIiwibmJmIjoxNjU0NDQ3NDkzfQ.SDyHGGU41lvYWqg6w95MvEIqvs-L_R7woBaKB41Q4F0",
+    # "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJTdGFuZGFyZFVzZXIiOiIwIiwidW5pcXVlX25hbWUiOiJ1c21hbi5vbXVyYWxpZXZAYWxhdG9vLmVkdS5rZyIsInN1YiI6InVzbWFuLm9tdXJhbGlldkBhbGF0b28uZWR1LmtnIiwicm9sZSI6InVzZXIiLCJhdHdydG1rIjoiZDMwZGMxZjYtZTRlZS0xMWVjLWJiODUtOGE1NTRiMmY1N2E3IiwidXNlcklkIjoiOTM2ODAxMDkiLCJlbWFpbCI6InVzbWFuLm9tdXJhbGlldkBhbGF0b28uZWR1LmtnIiwiYXVkIjoic2JBeXpZdFgramhlTDRpZlZXeTV0eU1PTFBKV0Jya2EiLCJleHAiOjE4MTIyMzU0OTMsImlzcyI6ImF1dGgudHJlbmR5b2wuY29tIiwibmJmIjoxNjU0NDQ3NDkzfQ.SDyHGGU41lvYWqg6w95MvEIqvs-L_R7woBaKB41Q4F0",
 }
 
 
