@@ -52,7 +52,7 @@ class ParseProductCards(APIView):
 
 class CategoriesView(ListAPIView):
     queryset = Category.objects.all()
-    serializer_class = CategoriesSerializers
+    serializer_class = CategorySerializers
 
 
 class BrandsView(ListAPIView):
