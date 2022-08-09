@@ -90,7 +90,7 @@ class Scraper:
 
 
     def add_product_to_db(self, product, instance: BaseProduct) -> BaseProduct:
-        image_links = product["images"]
+        image_urls = product["images"]
         category = product["category"]
         show_color = product["showColor"]
         show_size = product["showSize"]
@@ -129,8 +129,8 @@ class Scraper:
         )
         product_obj.save()
 
-        for link in image_links:
-            Image.objects.update_or_create(link=link, product=product_obj)
+        for url in image_urls:
+            Image.objects.update_or_create(url=url, product=product_obj)
 
         for size in sizes:
             size_obj = Size(name=size["value"], slug=slugify(size["value"]))
