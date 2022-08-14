@@ -33,9 +33,6 @@ class ProductCardsViewSet(ModelViewSet):
     filterset_class = ProductCardFilter
     search_fields = ['name']
 
-    # filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    # search_fields = ['name']
-
     # def retrieve(self, request, *args, **kwargs):
     #     instance = self.get_object()
     #     serializer =

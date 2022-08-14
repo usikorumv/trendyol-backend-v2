@@ -11,16 +11,18 @@ class Category(models.Model):
         null=True,
         related_name="children"
     )
+    chain = models.CharField(max_length=500)
 
     class Meta:
         verbose_name = "Category"
         verbose_name_plural = "Categories"
 
     def __str__(self):
-        if not self.parent:
-            return self.slug
-        else:
-            return f"{self.parent} --> {self.slug}"
+        return self.chain
+
+    def save(self, *args, **kwargs):
+        self.chain = f"{self.parent}->{self.slug}"
+        super(Category, self).save(*args, **kwargs)
 
 
 class Brand(models.Model):

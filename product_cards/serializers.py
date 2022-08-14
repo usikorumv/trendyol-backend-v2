@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from .models import *
 from base_product.serializers import *
+from parser.serializers import CategorySerializer
 
 
 class ProductColorsSerializer(serializers.ModelSerializer):

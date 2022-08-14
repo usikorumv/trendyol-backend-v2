@@ -5,10 +5,8 @@ from base_product.models import *
 from products.models import *
 from product_cards.models import *
 
-# TODO: PASTE ALL SLUGS FROM SLUGIFY
 
-
-class Scraper:
+class Client:
     def __init__(self):
         self.scraper = TrendyolScraper()
 
@@ -49,8 +47,6 @@ class Scraper:
         return f"Sizes added successfully! {len(all_sizes)}"
 
     def parse_categories(self):
-        Category.objects.all().delete()
-
         all_categories = self.scraper.get_all_categories()
 
         for category in all_categories:
@@ -76,20 +72,20 @@ class Scraper:
         #     all_product_cards = ujson.load(f)
 
         for product_card in all_product_cards:
-            print(product_card["id"])
-
-            product_card_obj = self.add_product_to_db(product_card, ProductCard)
+            product_card_obj = Client.add_product_to_db(product_card, ProductCard)
 
             for color in product_card["colors"]:
                 color_obj = Color(name=color["name"], slug=color["slug"])
                 color_obj.save()
 
-                product_obj = self.add_product_to_db(color["product"], Product)
+                product_obj = Client.add_product_to_db(color["product"], Product)
 
                 ProductColor.objects.update_or_create(color=color_obj, product_card=product_card_obj, product=product_obj)
 
+        return f"Product Cards were added successfully! {len(all_product_cards)}"
 
-    def add_product_to_db(self, product, instance: BaseProduct) -> BaseProduct:
+    @staticmethod
+    def add_product_to_db(product, instance: BaseProduct) -> BaseProduct:
         image_urls = product["images"]
         category = product["category"]
         show_color = product["showColor"]

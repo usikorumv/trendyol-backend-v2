@@ -272,10 +272,10 @@ class TrendyolService(TrendyolAPIs):
 
             tasks = [
                 self.fetch_all_product_cards_from_link(session, category["link"], page)
-                for page in range(208 + 1)
-                for category in end_categories
-                # for page in range(1)  # FOR TEST PURPOSES
-                # for category in end_categories[:1]  # FOR TEST PURPOSES
+                # for page in range(208 + 1)
+                # for category in end_categories
+                for page in range(1)  # FOR TEST PURPOSES
+                for category in end_categories[:1]  # FOR TEST PURPOSES
             ]
 
             await asyncio.gather(*tasks)
