@@ -1,0 +1,48 @@
+name: Docker
+
+on:
+  push:
+    branches: 
+      - master
+
+      
+  pull_request:
+    branches: [ "master" ]
+
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    steps:
+    
+#       - name: cleanup
+#         run : |
+#           sudo chown -R $USER:$USER $GITHUB_WORKSPACE          
+        
+        
+      - uses: actions/checkout@v2  
+
+      - name: Stop main container
+        run: | 
+          docker stop tutorial-usa_web_1 \
+          docker stop tutorial-usa_db_1 \
+      - name: Docker-compose up
+        run : |
+          docker-compose up -d
+         
+      - name: Collectstatic
+        run : |
+          docker exec -it container_id python3 manage.py collectstatic
+          
+      - name: Makemigrations
+        run : | 
+          docker exec -it container_id python3 manage.py makemigrations
+          
+#       - name: Createsuperuser
+#         run : |
+#           docker exec -it container_id python3 manage.py createsuperuser
+          
+      - name: Migrate
+        run : |
+          docker exec -it container_id python3 manage.py migrate
