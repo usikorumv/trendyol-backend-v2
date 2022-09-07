@@ -53,4 +53,4 @@ jobs:
           
       - name: Createsuperuser
         run: |
-          docker-compose run web python3 manage.py createsuperuser --noinput --username admin --email alatoo2022@gmail.com
+          docker-compose run web python3 manage.py createsuperuser --noinput --username admin --email alatoo2022@gmail.com --password 1
