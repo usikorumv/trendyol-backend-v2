@@ -1,11 +1,9 @@
-name: Docker
+name: tutor
+
 
 on:
   push:
-    branches: 
-      - master
-
-      
+    branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
 
@@ -15,34 +13,40 @@ jobs:
     runs-on: self-hosted
 
     steps:
+          
+      - uses: actions/checkout@v2
     
-#       - name: cleanup
-#         run : |
-#           sudo chown -R $USER:$USER $GITHUB_WORKSPACE          
-        
-        
-      - uses: actions/checkout@v2  
-
-      - name: Stop main container
+    
+      - name: Stop trendyol-backend-v2_web_1 container
         run: | 
-          docker stop tutorial-usa_web_1 \
-          docker stop tutorial-usa_db_1 \
-      - name: Docker-compose up
-        run : |
+          docker stop trendyol-backend-v2_web_1 
+
+      - name: Stop trendyol-backend-v2_db_1 container
+        run: | 
+          docker stop trendyol-backend-v2_db_1
+          
+      - name: Delete trendyol-backend-v2_web_1 container
+        run: |
+          docker rm trendyol-backend-v2_web_1 
+
+          
+      - name: Delete trendyol-backend-v2_db_1 container
+        run: |
+          docker rm trendyol-backend-v2_db_1
+          
+      - name: Run Docker-Compose
+        run: |
           docker-compose up -d
-         
-      - name: Collectstatic
-        run : |
-          docker exec -it container_id python3 manage.py collectstatic
-          
+            
       - name: Makemigrations
-        run : | 
-          docker exec -it container_id python3 manage.py makemigrations
-          
-#       - name: Createsuperuser
-#         run : |
-#           docker exec -it container_id python3 manage.py createsuperuser
+        run: |
+          docker-compose run web python3 manage.py makemigrations
           
       - name: Migrate
-        run : |
-          docker exec -it container_id python3 manage.py migrate
+        run: |
+          docker-compose run web python3 manage.py migrate
+          
+      - name: Collectstatic
+        run: |
+          docker-compose run web python3 manage.py collectstatic 
+
