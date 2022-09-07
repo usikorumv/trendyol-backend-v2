@@ -8,4 +8,5 @@ COPY . .
 
 RUN python -m pip install --upgrade pip setuptools wheel
 
-RUN pip install -r requirments.txt
+RUN pip3 install -r requirments.txt
+RUN pip3 install django-createsuperuserwithpassword
